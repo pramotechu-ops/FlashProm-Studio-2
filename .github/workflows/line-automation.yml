@@ -1,0 +1,22 @@
+name: FlashProm Studio 2 Automation
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  run-automation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+    - name: Fetch Google Sheets & Send to LINE
+      env:
+        LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+      run: |
+        LATEST_DATA=$(curl -sL "https://docs.google.com/spreadsheets/d/10TMyoXf3-D0F-c5HgoR63Cc5Hm6CV1/export?format=csv" | tail -n 1 | tr -d '\r')
+        curl -X POST "https://api.line.me/v2/bot/message/broadcast" \
+          -H "Authorization: Bearer $LINE_CHANNEL_ACCESS_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "{\"messages\":[{\"type\":\"text\",\"text\":\"v1 GitHub Actions Auto-Run Sheet: $LATEST_DATA\"}]}"
