@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "=========================================="
+echo "   SYSTEM CHECK & DOCKER PORT 5679 STATUS "
+echo "=========================================="
+echo "User: $(whoami)"
+echo "Host: $(hostname)"
+echo "OS: macOS ($(uname -m))"
+echo "Date: $(date)"
+echo "------------------------------------------"
+echo "Checking Docker Container Status for n8n..."
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep -E "n8n|5679" || echo "⚠️ n8n container not detected on port 5679"
+echo "=========================================="
