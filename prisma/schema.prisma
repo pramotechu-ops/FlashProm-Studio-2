@@ -1,0 +1,21 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model TravelRoute {
+  id          String   @id @default(cuid())
+  sheetRowId  Int?
+  title       String
+  origin      String?
+  destination String?
+  distanceKm  Float?
+  travelDate  DateTime @default(now())
+  status      String   @default("COMPLETED")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
